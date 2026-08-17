@@ -1,1 +1,10 @@
-# Smart-Query-Routing-Email-Automation-System
+# Smart-Query-Routing-Email-Automation-System---
+title: Smart Query Routing Email Automation System
+emoji: 📧
+colorFrom: blue
+colorTo: indigo
+sdk: docker
+pinned: false
+app_port: 7860
+docker_path: Backend/Dockerfile
+---
