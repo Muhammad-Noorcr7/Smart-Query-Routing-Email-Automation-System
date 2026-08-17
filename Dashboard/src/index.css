@@ -1,0 +1,136 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Sora", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  --color-bg: #F7F8FB;
+  --color-surface: #FFFFFF;
+  --color-surface-sunken: #F1F2F7;
+  --color-border: #E5E7F0;
+  --color-border-strong: #D3D6E5;
+
+  --color-ink: #10132A;
+  --color-ink-muted: #565C79;
+  --color-ink-faint: #9297AE;
+
+  --color-primary: #3538CD;
+  --color-primary-dark: #2A2CA3;
+  --color-primary-soft: #EEEFFD;
+  --color-primary-ring: #C7C9F5;
+
+  --color-teal: #0F9E92;
+  --color-teal-soft: #E3F7F4;
+
+  --color-dept-exam: #7C3AED;
+  --color-dept-exam-soft: #F2E9FE;
+  --color-dept-finance: #0E9F6E;
+  --color-dept-finance-soft: #E3FAF0;
+  --color-dept-registrar: #D97706;
+  --color-dept-registrar-soft: #FEF3E0;
+  --color-dept-it: #0284C7;
+  --color-dept-it-soft: #E4F3FC;
+  --color-dept-instructor: #E11D48;
+  --color-dept-instructor-soft: #FEE9EE;
+  --color-dept-admin: #64748B;
+  --color-dept-admin-soft: #EEF1F5;
+
+  --color-status-open: #64748B;
+  --color-status-open-soft: #EEF1F5;
+  --color-status-routed: #3538CD;
+  --color-status-routed-soft: #EEEFFD;
+  --color-status-escalated: #DC2626;
+  --color-status-escalated-soft: #FDECEC;
+  --color-status-resolved: #16A34A;
+  --color-status-resolved-soft: #E9F9EE;
+
+  --color-node-trigger: #8A90A6;
+  --color-node-gmail: #2563EB;
+  --color-node-ai: #7C3AED;
+  --color-node-action: #0F9E92;
+  --color-node-db: #16A34A;
+  --color-node-escalation: #F97066;
+
+  --shadow-card: 0 1px 2px 0 rgba(16, 19, 42, 0.04), 0 1px 6px -2px rgba(16, 19, 42, 0.06);
+  --shadow-card-hover: 0 4px 10px -2px rgba(16, 19, 42, 0.08), 0 2px 6px -2px rgba(16, 19, 42, 0.06);
+  --shadow-popover: 0 12px 32px -8px rgba(16, 19, 42, 0.18), 0 4px 12px -4px rgba(16, 19, 42, 0.1);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  html {
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+  }
+  ::selection {
+    background-color: var(--color-primary-ring);
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--color-border-strong);
+    border-radius: 8px;
+    border: 2px solid var(--color-bg);
+  }
+}
+
+@layer utilities {
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Flow particle animation along SVG paths */
+@keyframes flow-dash {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+.flow-line {
+  stroke-dasharray: 3 5;
+  animation: flow-dash 1.1s linear infinite;
+}
+.flow-line-slow {
+  stroke-dasharray: 3 6;
+  animation: flow-dash 2.4s linear infinite;
+}
+
+@keyframes travel-dot {
+  0% { left: -3px; opacity: 0; }
+  8% { opacity: 1; }
+  92% { opacity: 1; }
+  100% { left: 100%; opacity: 0; }
+}
+.travel-dot {
+  animation: travel-dot 2.2s linear infinite;
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+.pulse-dot {
+  animation: pulse-soft 1.6s ease-in-out infinite;
+}
+
+@keyframes skeleton-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, var(--color-surface-sunken) 25%, #E9EBF3 37%, var(--color-surface-sunken) 63%);
+  background-size: 400% 100%;
+  animation: skeleton-shimmer 1.4s ease infinite;
+}
