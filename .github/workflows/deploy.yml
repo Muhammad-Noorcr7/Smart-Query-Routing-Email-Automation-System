@@ -1,0 +1,26 @@
+name: Sync to Hugging Face Hub
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  sync-to-hub:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Push Backend to Hugging Face Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          SUBTREE_SHA=$(git subtree split --prefix backend main)
+
+          git push --force \
+            "https://Noor2623:${HF_TOKEN}@huggingface.co/spaces/Noor2623/Smart-Query-Routing-Email-Automation-System" \
+            "${SUBTREE_SHA}:main"
