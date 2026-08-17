@@ -19,7 +19,7 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          SUBTREE_SHA=$(git subtree split --prefix backend main)
+          SUBTREE_SHA=$(git subtree split --prefix Backend main)
 
           git push --force \
             "https://Noor2623:${HF_TOKEN}@huggingface.co/spaces/Noor2623/Smart-Query-Routing-Email-Automation-System" \
