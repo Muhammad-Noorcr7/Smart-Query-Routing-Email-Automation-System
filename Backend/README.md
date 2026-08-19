@@ -1,5 +1,5 @@
 ---
-title: Smart Query Routing Email Automation Systems
+title: Smart Query Routing Email Automation System
 emoji: 📧
 colorFrom: blue
 colorTo: indigo
