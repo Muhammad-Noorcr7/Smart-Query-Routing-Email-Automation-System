@@ -22,5 +22,5 @@ jobs:
           SUBTREE_SHA=$(git subtree split --prefix Backend main)
 
           git push --force \
-            "https://Noor2623:${HF_TOKEN}@huggingface.co/spaces/Noor2623/Smart-Query-Routing-Email-Automation-System" \
+            "https://AhmadYarAI:${HF_TOKEN}@huggingface.co/spaces/AhmadYarAI/smart-query-routing-email-automation-system" \
             "${SUBTREE_SHA}:main"
