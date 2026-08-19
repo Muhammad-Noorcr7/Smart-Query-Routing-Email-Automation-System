@@ -32,7 +32,32 @@ import {
   mockAvgResolutionByDept,
 } from "../data/mockData.js";
 
-// export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+export const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
+
+async function parseResponse(response) {
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(data.detail || "Something went wrong. Please try again.");
+  }
+  return data;
+}
+
+export async function loginUser({ email, password }) {
+  const response = await fetch(`${API_BASE_URL}/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
+  return parseResponse(response);
+}
+
+export async function getAdminUsers(token) {
+  const response = await fetch(`${API_BASE_URL}/admin/users`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return parseResponse(response);
+}
 
 const NETWORK_DELAY_MS = 300;
 

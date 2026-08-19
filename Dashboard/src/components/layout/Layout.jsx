@@ -5,7 +5,7 @@ import MobileNav from "./MobileNav";
 import TopBar from "./TopBar";
 
 const TITLES = {
-  "/": { title: "Dashboard", subtitle: "Live overview of email routing & tickets" },
+  "/dashboard": { title: "Dashboard", subtitle: "Live overview of email routing & tickets" },
   "/pipeline": { title: "Pipeline Flow", subtitle: "Main routing & escalation pipelines" },
   "/tickets": { title: "Tickets", subtitle: "Every email routed through QueryRoute" },
   "/analytics": { title: "Analytics", subtitle: "Trends across departments over time" },
@@ -15,7 +15,7 @@ const TITLES = {
 export default function Layout() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { pathname } = useLocation();
-  const meta = TITLES[pathname] ?? TITLES["/"];
+  const meta = TITLES[pathname] ?? TITLES["/dashboard"];
 
   return (
     <div className="min-h-screen bg-bg">

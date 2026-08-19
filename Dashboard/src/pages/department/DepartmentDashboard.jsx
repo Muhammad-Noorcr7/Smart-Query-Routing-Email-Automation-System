@@ -1,0 +1,52 @@
+import { useEffect, useState } from "react";
+import { AlertTriangle, CheckCircle2, Clock3, Inbox } from "lucide-react";
+import { Link } from "react-router-dom";
+import { getTickets } from "../../api";
+import { useAuth } from "../../hooks/useAuth";
+import { getDepartmentLabel } from "../../utils/auth";
+import StatCard from "../../components/dashboard/StatCard";
+import Card, { CardHeader } from "../../components/ui/Card";
+import ActivityFeed from "../../components/dashboard/ActivityFeed";
+
+export default function DepartmentDashboard() {
+  const { user } = useAuth();
+  const department = getDepartmentLabel(user);
+  const [tickets, setTickets] = useState([]);
+
+  useEffect(() => {
+    getTickets().then((allTickets) =>
+      setTickets(allTickets.filter((ticket) => ticket.department === department))
+    );
+  }, [department]);
+
+  const count = (status) => tickets.filter((ticket) => ticket.status === status).length;
+
+  return (
+    <div className="space-y-6">
+      <Card className="border-primary-ring bg-primary-soft/50">
+        <p className="text-xs font-semibold uppercase tracking-wider text-primary">Department workspace</p>
+        <h2 className="mt-2 font-display text-2xl font-semibold text-ink">{department}</h2>
+        <p className="mt-2 text-sm text-ink-muted">
+          You are viewing only tickets assigned to your department.
+        </p>
+      </Card>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <StatCard label="Assigned tickets" value={tickets.length} icon={Inbox} trend={`${department} total workload`} />
+        <StatCard label="Open" value={count("Open") + count("Routed")} icon={Clock3} accent="teal" trend="Waiting for department action" />
+        <StatCard label="Escalated" value={count("Escalated")} icon={AlertTriangle} accent="escalated" trend="Past the response threshold" />
+        <StatCard label="Resolved" value={count("Resolved")} icon={CheckCircle2} accent="resolved" trend="Successfully completed" />
+      </div>
+
+      <Card padded={false}>
+        <div className="flex items-start justify-between gap-4 p-5 pb-0">
+          <CardHeader title="Recent department activity" subtitle={`Latest queries routed to ${department}`} />
+          <Link to="/department/tickets" className="shrink-0 text-xs font-semibold text-primary">Manage tickets</Link>
+        </div>
+        <div className="p-5">
+          <ActivityFeed tickets={tickets.slice(0, 8)} loading={false} />
+        </div>
+      </Card>
+    </div>
+  );
+}

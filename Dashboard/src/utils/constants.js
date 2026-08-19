@@ -155,7 +155,7 @@ export const NODE_TYPE_HEX = {
 };
 
 export const NAV_ITEMS = [
-  { to: "/", label: "Dashboard", icon: LayoutDashboard, end: true },
+  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, end: true },
   { to: "/pipeline", label: "Pipeline Flow", icon: Workflow },
   { to: "/tickets", label: "Tickets", icon: Inbox },
   { to: "/analytics", label: "Analytics", icon: BarChart3 },
