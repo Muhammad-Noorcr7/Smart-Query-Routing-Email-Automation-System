@@ -2,8 +2,6 @@ import { useState } from "react";
 import { CheckCircle2, Send } from "lucide-react";
 import Card, { CardHeader } from "../../components/ui/Card";
 
-const DEPARTMENTS = ["Not sure — route automatically", "Exam", "Finance", "Registrar", "Instructor", "IT Dept"];
-
 export default function SubmitQuery() {
   const [submitted, setSubmitted] = useState(false);
 
@@ -18,7 +16,7 @@ export default function SubmitQuery() {
       <Card>
         <CardHeader
           title="How can we help?"
-          subtitle="Give us enough detail to route your query to the right department."
+          subtitle="Write your query below and it will be routed to the right department automatically."
         />
 
         {submitted && (
@@ -33,20 +31,8 @@ export default function SubmitQuery() {
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-5">
           <div>
-            <label htmlFor="query-department" className="mb-2 block text-sm font-medium text-ink">Department</label>
-            <select id="query-department" name="department"
-              className="h-12 w-full rounded-xl border border-border bg-surface px-4 text-sm text-ink outline-none focus:border-primary focus:ring-4 focus:ring-primary-soft">
-              {DEPARTMENTS.map((department) => <option key={department}>{department}</option>)}
-            </select>
-          </div>
-          <div>
-            <label htmlFor="query-subject" className="mb-2 block text-sm font-medium text-ink">Subject</label>
-            <input id="query-subject" name="subject" required placeholder="Briefly describe your question"
-              className="h-12 w-full rounded-xl border border-border bg-surface px-4 text-sm text-ink outline-none placeholder:text-ink-faint focus:border-primary focus:ring-4 focus:ring-primary-soft" />
-          </div>
-          <div>
-            <label htmlFor="query-message" className="mb-2 block text-sm font-medium text-ink">Message</label>
-            <textarea id="query-message" name="message" required rows={7} placeholder="Include all relevant details..."
+            <label htmlFor="query-message" className="mb-2 block text-sm font-medium text-ink">Query / Message</label>
+            <textarea id="query-message" name="message" required rows={10} placeholder="Write your query here..."
               className="w-full resize-y rounded-xl border border-border bg-surface px-4 py-3 text-sm leading-6 text-ink outline-none placeholder:text-ink-faint focus:border-primary focus:ring-4 focus:ring-primary-soft" />
           </div>
           <button type="submit"
