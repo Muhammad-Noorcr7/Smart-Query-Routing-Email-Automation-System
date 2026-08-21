@@ -6,6 +6,8 @@ class DepartmentCreate(BaseModel):
     code: str
     description: str | None = None
     keywords: str | None = None
+    user_id: int | None = None
+    query: str | None = None
 
 
 class DepartmentResponse(DepartmentCreate):

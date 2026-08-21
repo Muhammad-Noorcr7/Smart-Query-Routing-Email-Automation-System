@@ -12,5 +12,7 @@ class Department(Base):
     code = Column(String(20), unique=True, nullable=False)
     description = Column(Text, nullable=True)
     keywords = Column(Text, nullable=True)
+    user_id = Column(Integer, nullable=True)
+    query = Column(Text, nullable=True)
     is_active = Column(Boolean, default=True, nullable=False)
     users = relationship("User", back_populates="department")

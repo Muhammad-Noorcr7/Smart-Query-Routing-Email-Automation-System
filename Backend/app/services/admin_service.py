@@ -40,6 +40,8 @@ def create_department(
     code: str,
     description: str | None = None,
     keywords: str | None = None,
+    user_id: int | None = None,
+    query: str | None = None,
 ) -> Department:
     if _department_exists_with_name_or_code(db, name=name):
         raise ValueError("Department name is already registered")
@@ -51,6 +53,8 @@ def create_department(
         code=code,
         description=description,
         keywords=keywords,
+        user_id=user_id,
+        query=query,
     )
     db.add(department)
     db.commit()
@@ -89,6 +93,10 @@ def update_department(
         department.description = payload.description
     if payload.keywords is not None:
         department.keywords = payload.keywords
+    if payload.user_id is not None:
+        department.user_id = payload.user_id
+    if payload.query is not None:
+        department.query = payload.query
     if payload.is_active is not None:
         department.is_active = payload.is_active
 

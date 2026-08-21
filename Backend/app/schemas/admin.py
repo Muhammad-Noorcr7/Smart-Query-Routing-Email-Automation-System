@@ -6,6 +6,8 @@ class AdminDepartmentUpdate(BaseModel):
     code: str | None = Field(default=None, max_length=20)
     description: str | None = None
     keywords: str | None = None
+    user_id: int | None = None
+    query: str | None = None
     is_active: bool | None = None
 
 

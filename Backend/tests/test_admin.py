@@ -70,6 +70,38 @@ def test_admin_can_create_update_and_deactivate_department():
         Base.metadata.drop_all(bind=engine)
 
 
+def test_admin_can_store_user_and_query_on_department():
+    engine, db = _make_session()
+    try:
+        created = create_department(
+            db,
+            name="Student Support",
+            code="SSUP",
+            description="Student support desk",
+            keywords="support, help",
+            user_id=19,
+            query="Initial student support request",
+        )
+
+        assert created.user_id == 19
+        assert created.query == "Initial student support request"
+
+        updated = update_department(
+            db,
+            department_id=created.id,
+            payload=AdminDepartmentUpdate(
+                query="I need help with my fee payment",
+                is_active=True,
+            ),
+        )
+
+        assert updated.query == "I need help with my fee payment"
+        assert updated.user_id == 19
+    finally:
+        db.close()
+        Base.metadata.drop_all(bind=engine)
+
+
 def test_admin_can_list_and_update_user_department():
     engine, db = _make_session()
     try:
