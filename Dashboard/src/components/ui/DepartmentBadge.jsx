@@ -1,7 +1,7 @@
-import { DEPARTMENT_CONFIG } from "../../utils/constants";
+import { DEPARTMENT_CONFIG_BY_NAME, DEPARTMENT_CONFIG } from "../../utils/constants";
 
 export default function DepartmentBadge({ department, className = "" }) {
-  const config = DEPARTMENT_CONFIG[department];
+  const config = DEPARTMENT_CONFIG_BY_NAME[department] || DEPARTMENT_CONFIG.Admin;
   if (!config) return null;
   const Icon = config.icon;
   return (

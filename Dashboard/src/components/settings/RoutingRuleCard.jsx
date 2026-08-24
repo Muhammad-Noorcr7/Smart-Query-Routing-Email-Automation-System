@@ -1,22 +1,29 @@
 import { useState } from "react";
 import { Check, Loader2 } from "lucide-react";
-import { DEPARTMENT_CONFIG } from "../../utils/constants";
+import { DEPARTMENT_CONFIG_BY_NAME, DEPARTMENT_CONFIG } from "../../utils/constants";
 import Toggle from "../ui/Toggle";
 
 export default function RoutingRuleCard({ rule, onSave }) {
+  const keywordList = Array.isArray(rule.keywords)
+    ? rule.keywords
+    : String(rule.keywords ?? "")
+        .split(",")
+        .map((keyword) => keyword.trim())
+        .filter(Boolean);
+
   const [description, setDescription] = useState(rule.description);
-  const [keywords, setKeywords] = useState(rule.keywords.join(", "));
+  const [keywords, setKeywords] = useState(keywordList.join(", "));
   const [threshold, setThreshold] = useState(rule.escalationThresholdHours);
   const [enabled, setEnabled] = useState(rule.enabled);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
-  const config = DEPARTMENT_CONFIG[rule.department];
+  const config = DEPARTMENT_CONFIG_BY_NAME[rule.department] || DEPARTMENT_CONFIG.Admin;
   const Icon = config.icon;
 
   const dirty =
     description !== rule.description ||
-    keywords !== rule.keywords.join(", ") ||
+    keywords !== keywordList.join(", ") ||
     Number(threshold) !== rule.escalationThresholdHours ||
     enabled !== rule.enabled;
 

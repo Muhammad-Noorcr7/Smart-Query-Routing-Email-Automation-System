@@ -34,7 +34,7 @@ export default function DepartmentBarChart({ data, loading }) {
         <Tooltip content={<CustomTooltip />} cursor={{ fill: "#F1F2F7" }} />
         <Bar dataKey="count" radius={[6, 6, 0, 0]} maxBarSize={44}>
           {data.map((entry) => (
-            <Cell key={entry.department} fill={DEPARTMENT_HEX[entry.department]} />
+            <Cell key={entry.department} fill={DEPARTMENT_HEX[entry.department] || "#64748B"} />
           ))}
         </Bar>
       </BarChart>
