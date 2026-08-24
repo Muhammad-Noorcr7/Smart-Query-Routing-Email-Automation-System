@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { AlertTriangle, CheckCircle2, Clock3, Inbox } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Clock3, Inbox, FileText, Hash } from "lucide-react";
 import { Link } from "react-router-dom";
-import { getTickets } from "../../api";
+import { getDepartments, getTickets } from "../../api";
 import { useAuth } from "../../hooks/useAuth";
 import { getDepartmentLabel } from "../../utils/auth";
 import StatCard from "../../components/dashboard/StatCard";
@@ -11,12 +11,23 @@ import ActivityFeed from "../../components/dashboard/ActivityFeed";
 export default function DepartmentDashboard() {
   const { user } = useAuth();
   const department = getDepartmentLabel(user);
+  const [departmentRow, setDepartmentRow] = useState(null);
   const [tickets, setTickets] = useState([]);
 
   useEffect(() => {
-    getTickets().then((allTickets) =>
-      setTickets(allTickets.filter((ticket) => ticket.department === department))
-    );
+    let active = true;
+
+    Promise.all([getDepartments(), getTickets()]).then(([departments, allTickets]) => {
+      if (!active) return;
+      const currentDepartment =
+        departments.find((item) => item.name?.toLowerCase() === department.toLowerCase()) || null;
+      setDepartmentRow(currentDepartment);
+      setTickets(allTickets.filter((ticket) => ticket.department === department));
+    });
+
+    return () => {
+      active = false;
+    };
   }, [department]);
 
   const count = (status) => tickets.filter((ticket) => ticket.status === status).length;
@@ -27,8 +38,36 @@ export default function DepartmentDashboard() {
         <p className="text-xs font-semibold uppercase tracking-wider text-primary">Department workspace</p>
         <h2 className="mt-2 font-display text-2xl font-semibold text-ink">{department}</h2>
         <p className="mt-2 text-sm text-ink-muted">
-          You are viewing only tickets assigned to your department.
+          You are viewing the department record that stores the saved query from Neon.
         </p>
+      </Card>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <StatCard label="Department ID" value={departmentRow?.id ?? "—"} icon={Hash} trend="Database row for this department" />
+        <StatCard label="User ID" value={departmentRow?.user_id ?? "—"} icon={Inbox} trend="Linked student or staff user" />
+        <StatCard label="Active" value={departmentRow?.is_active ? "Yes" : "No"} icon={CheckCircle2} accent="resolved" trend="Whether the department is available" />
+        <StatCard label="Has query" value={departmentRow?.query ? "Yes" : "No"} icon={FileText} accent="teal" trend="Saved query text on the department row" />
+      </div>
+
+      <Card>
+        <CardHeader
+          title="Saved department query"
+          subtitle="This is the query text currently stored in the departments table"
+        />
+        <div className="mt-4 rounded-xl border border-border bg-surface-sunken p-4">
+          {departmentRow?.query ? (
+            <p className="text-sm leading-6 text-ink-muted">{departmentRow.query}</p>
+          ) : (
+            <p className="text-sm text-ink-faint">
+              No query has been saved for this department yet.
+            </p>
+          )}
+          {departmentRow?.keywords && (
+            <p className="mt-3 text-xs text-ink-faint">
+              Keywords: {departmentRow.keywords}
+            </p>
+          )}
+        </div>
       </Card>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
