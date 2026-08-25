@@ -11,7 +11,7 @@ function normalize(value) {
 }
 
 export function getPortalRole(user) {
-  if (user?.is_admin || normalize(user?.role) === "admin") return "admin";
+  if (user?.is_admin) return "admin";
   if (normalize(user?.role) === "student") return "student";
   return "department";
 }

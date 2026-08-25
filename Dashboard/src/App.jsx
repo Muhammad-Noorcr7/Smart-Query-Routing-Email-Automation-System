@@ -5,6 +5,7 @@ import PipelineFlowPage from "./pages/PipelineFlowPage";
 import Tickets from "./pages/Tickets";
 import Analytics from "./pages/Analytics";
 import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 import StudentDashboard from "./pages/student/StudentDashboard";
 import SubmitQuery from "./pages/student/SubmitQuery";
 import MyQueries from "./pages/student/MyQueries";
@@ -22,6 +23,11 @@ function HomeRoute() {
   return isAuthenticated ? <Navigate to={getDashboardPath(user)} replace /> : <Login />;
 }
 
+function SignupRoute() {
+  const { user, isAuthenticated } = useAuth();
+  return isAuthenticated ? <Navigate to={getDashboardPath(user)} replace /> : <Signup />;
+}
+
 function MissingRoute() {
   const { user, isAuthenticated } = useAuth();
   return <Navigate to={isAuthenticated ? getDashboardPath(user) : "/"} replace />;
@@ -32,6 +38,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomeRoute />} />
+        <Route path="/signup" element={<SignupRoute />} />
 
         <Route element={<ProtectedRoute allow={["student"]} />}>
           <Route element={<PortalLayout />}>

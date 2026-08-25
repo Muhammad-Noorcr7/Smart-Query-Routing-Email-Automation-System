@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { loginUser } from "../api";
+import { loginUser, signupUser } from "../api";
 import { roleMatchesSelection } from "../utils/auth";
 import AuthContext from "./auth-context";
 
@@ -37,6 +37,17 @@ export function AuthProvider({ children }) {
     return response.user;
   }
 
+  async function signup({ email, password, fullName, departmentName }) {
+    const response = await signupUser({ email, password, fullName, departmentName });
+    setUser(response.user);
+    setToken(response.access_token);
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({ user: response.user, token: response.access_token })
+    );
+    return response.user;
+  }
+
   function logout() {
     setUser(null);
     setToken(null);
@@ -44,7 +55,7 @@ export function AuthProvider({ children }) {
   }
 
   const value = useMemo(
-    () => ({ user, token, isAuthenticated: Boolean(user && token), login, logout }),
+    () => ({ user, token, isAuthenticated: Boolean(user && token), login, signup, logout }),
     [user, token]
   );
 

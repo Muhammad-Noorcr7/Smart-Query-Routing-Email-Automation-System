@@ -40,6 +40,9 @@ def create_user(db: Session, payload: SignupRequest) -> User:
     if existing_user is not None:
         raise ValueError("Email is already registered")
 
+    if payload.department_name.strip().lower() == "admin":
+        raise ValueError("Admin accounts cannot be created through public signup")
+
     role, department_id = resolve_signup_target(db, payload.department_name)
 
     user = User(

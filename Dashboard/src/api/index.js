@@ -90,6 +90,25 @@ export async function loginUser({ email, password }) {
   return parseResponse(response);
 }
 
+export async function signupUser({ email, password, fullName, departmentName }) {
+  const response = await fetch(`${API_BASE_URL}/auth/signup`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      email,
+      password,
+      full_name: fullName,
+      department_name: departmentName,
+    }),
+  });
+  return parseResponse(response);
+}
+
+export async function getActiveDepartments() {
+  const response = await fetch(`${API_BASE_URL}/departments/`);
+  return parseResponse(response);
+}
+
 export async function getAdminUsers(token) {
   return request("/admin/users", {
     headers: { Authorization: `Bearer ${token}` },
