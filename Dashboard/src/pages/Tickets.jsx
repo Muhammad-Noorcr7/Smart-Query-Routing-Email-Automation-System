@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import { getTickets } from "../api";
+import { getAllTickets } from "../api";
+import { useAuth } from "../hooks/useAuth";
 import TicketFilters from "../components/tickets/TicketFilters";
 import TicketsTable from "../components/tickets/TicketsTable";
 
 export default function Tickets() {
+  const { token } = useAuth();
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -14,7 +16,7 @@ export default function Tickets() {
 
   useEffect(() => {
     let active = true;
-    getTickets().then((res) => {
+    getAllTickets(token).then((res) => {
       if (!active) return;
       setTickets(res);
       setLoading(false);
@@ -22,7 +24,7 @@ export default function Tickets() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [token]);
 
   function handleSort(key) {
     if (key === sortKey) {

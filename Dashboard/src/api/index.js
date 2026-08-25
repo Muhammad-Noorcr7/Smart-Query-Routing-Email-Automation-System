@@ -137,6 +137,18 @@ export async function getTickets(token = getStoredToken()) {
   return queries.map(mapQueryToTicket);
 }
 
+export async function getAllTickets(token = getStoredToken()) {
+  if (!token) {
+    return [];
+  }
+
+  const queries = await request("/admin/queries", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  return queries.map(mapQueryToTicket);
+}
+
 /** Single ticket by id. */
 export async function getTicketById(id) {
   await delay(150);

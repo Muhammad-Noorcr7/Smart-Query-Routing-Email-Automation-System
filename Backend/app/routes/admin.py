@@ -5,6 +5,7 @@ from app.dependencies import get_current_admin_user, get_db
 from app.models.user import User
 from app.schemas.admin import AdminDepartmentUpdate, AdminUserUpdate
 from app.schemas.department import DepartmentCreate, DepartmentResponse
+from app.schemas.query import QueryRead
 from app.schemas.user import UserRead
 from app.services.admin_service import (
     create_department,
@@ -17,6 +18,7 @@ from app.services.admin_service import (
     update_department,
     update_user,
 )
+from app.services.query_service import list_all_queries
 
 
 router = APIRouter(prefix="/admin", tags=["admin"])
@@ -89,6 +91,15 @@ def admin_list_users(
 ):
     _ = current_admin
     return list_users(db)
+
+
+@router.get("/queries", response_model=list[QueryRead])
+def admin_list_queries(
+    db: Session = Depends(get_db),
+    current_admin: User = Depends(get_current_admin_user),
+):
+    _ = current_admin
+    return list_all_queries(db)
 
 
 @router.get("/users/{user_id}", response_model=UserRead)

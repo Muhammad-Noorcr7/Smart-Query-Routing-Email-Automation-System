@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { AlertTriangle, CheckCircle2, Clock3, Gauge } from "lucide-react";
-import { getTickets } from "../../api";
+import { getAllTickets } from "../../api";
 import { useAuth } from "../../hooks/useAuth";
 import { getDepartmentLabel } from "../../utils/auth";
 import StatCard from "../../components/dashboard/StatCard";
@@ -14,15 +14,15 @@ const STATUS_COLORS = {
 };
 
 export default function DepartmentAnalytics() {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const department = getDepartmentLabel(user);
   const [tickets, setTickets] = useState([]);
 
   useEffect(() => {
-    getTickets().then((allTickets) =>
+    getAllTickets(token).then((allTickets) =>
       setTickets(allTickets.filter((ticket) => ticket.department === department))
     );
-  }, [department]);
+  }, [department, token]);
 
   const count = (status) => tickets.filter((ticket) => ticket.status === status).length;
   const resolutionRate = tickets.length ? Math.round((count("Resolved") / tickets.length) * 100) : 0;

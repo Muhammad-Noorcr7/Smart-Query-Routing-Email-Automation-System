@@ -7,6 +7,7 @@ from app.models.department import Department
 from app.schemas.auth import SignupRequest
 from app.schemas.query import QueryCreate
 from app.services.auth_service import create_user
+from app.services import query_service
 from app.services.query_service import create_query, list_queries_for_user
 
 
@@ -155,6 +156,50 @@ def test_list_queries_for_user_only_returns_that_users_queries():
         assert len(queries) == 1
         assert queries[0].id == first_query.id
         assert queries[0].student_id == student_one.id
+    finally:
+        db.close()
+        Base.metadata.drop_all(bind=engine)
+
+
+def test_list_all_queries_returns_every_saved_query_for_admin():
+    engine, db = _make_session()
+    try:
+        finance = Department(
+            name="Finance Department",
+            code="FIN",
+            description="Handles fees, refunds, and payment plans",
+            keywords="fee, payment, tuition, refund",
+        )
+        admin = Department(
+            name="Admin",
+            code="ADMIN",
+            description="Fallback team",
+            keywords="general, other",
+        )
+        db.add_all([finance, admin])
+        db.commit()
+        db.refresh(finance)
+        db.refresh(admin)
+
+        student_one = _create_student(db, email="student1@example.com")
+        student_two = _create_student(db, email="student2@example.com")
+
+        first_query = create_query(
+            db,
+            current_user=student_one,
+            payload=QueryCreate(message="Question about tuition payment"),
+        )
+        second_query = create_query(
+            db,
+            current_user=student_two,
+            payload=QueryCreate(message="Different student's message"),
+        )
+
+        queries = query_service.list_all_queries(db)
+
+        assert [query.id for query in queries] == [second_query.id, first_query.id]
+        assert queries[0].department_id in {finance.id, admin.id}
+        assert queries[1].department_id in {finance.id, admin.id}
     finally:
         db.close()
         Base.metadata.drop_all(bind=engine)

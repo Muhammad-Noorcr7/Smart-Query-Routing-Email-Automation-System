@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { AlertTriangle, CheckCircle2, Clock3, Inbox } from "lucide-react";
 import { Link } from "react-router-dom";
-import { getTickets } from "../../api";
+import { getAllTickets } from "../../api";
 import { useAuth } from "../../hooks/useAuth";
 import { getDepartmentLabel } from "../../utils/auth";
 import StatCard from "../../components/dashboard/StatCard";
@@ -9,15 +9,15 @@ import Card, { CardHeader } from "../../components/ui/Card";
 import ActivityFeed from "../../components/dashboard/ActivityFeed";
 
 export default function DepartmentDashboard() {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const department = getDepartmentLabel(user);
   const [tickets, setTickets] = useState([]);
 
   useEffect(() => {
-    getTickets().then((allTickets) =>
+    getAllTickets(token).then((allTickets) =>
       setTickets(allTickets.filter((ticket) => ticket.department === department))
     );
-  }, [department]);
+  }, [department, token]);
 
   const count = (status) => tickets.filter((ticket) => ticket.status === status).length;
 

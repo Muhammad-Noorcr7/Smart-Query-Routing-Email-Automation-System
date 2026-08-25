@@ -10,14 +10,14 @@ import DepartmentBadge from "../../components/ui/DepartmentBadge";
 import { timeAgo } from "../../utils/format";
 
 export default function StudentDashboard() {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const [queries, setQueries] = useState([]);
 
   useEffect(() => {
-    getTickets().then((tickets) =>
+    getTickets(token).then((tickets) =>
       setQueries(tickets.filter((ticket) => ticket.sender.toLowerCase() === user.email.toLowerCase()))
     );
-  }, [user.email]);
+  }, [token, user.email]);
 
   const open = queries.filter((query) => query.status === "Open" || query.status === "Routed").length;
   const resolved = queries.filter((query) => query.status === "Resolved").length;

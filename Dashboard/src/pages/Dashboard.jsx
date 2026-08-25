@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import { Mail, Route, AlertTriangle, Timer } from "lucide-react";
 import {
   getDashboardStats,
-  getTickets,
+  getAllTickets,
   getDepartmentVolumes,
   getWeeklyEmailVolume,
 } from "../api";
+import { useAuth } from "../hooks/useAuth";
 import StatCard from "../components/dashboard/StatCard";
 import ActivityFeed from "../components/dashboard/ActivityFeed";
 import DepartmentDonutChart from "../components/charts/DepartmentDonutChart";
@@ -14,6 +15,7 @@ import Card, { CardHeader } from "../components/ui/Card";
 import { SkeletonCard } from "../components/ui/Skeleton";
 
 export default function Dashboard() {
+  const { token } = useAuth();
   const [stats, setStats] = useState(null);
   const [tickets, setTickets] = useState([]);
   const [deptVolumes, setDeptVolumes] = useState([]);
@@ -25,7 +27,7 @@ export default function Dashboard() {
     async function load() {
       const [statsRes, ticketsRes, deptRes, weeklyRes] = await Promise.all([
         getDashboardStats(),
-        getTickets(),
+        getAllTickets(token),
         getDepartmentVolumes(),
         getWeeklyEmailVolume(),
       ]);
@@ -40,7 +42,7 @@ export default function Dashboard() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [token]);
 
   return (
     <div className="space-y-6">

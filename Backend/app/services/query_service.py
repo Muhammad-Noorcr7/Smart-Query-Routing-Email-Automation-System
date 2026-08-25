@@ -41,3 +41,12 @@ def list_queries_for_user(db: Session, *, current_user: User) -> list[Query]:
         .order_by(Query.created_at.desc(), Query.id.desc())
         .all()
     )
+
+
+def list_all_queries(db: Session) -> list[Query]:
+    return (
+        db.query(Query)
+        .options(selectinload(Query.department))
+        .order_by(Query.created_at.desc(), Query.id.desc())
+        .all()
+    )

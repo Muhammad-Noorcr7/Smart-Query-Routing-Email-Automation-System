@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { MessageSquareReply, Search } from "lucide-react";
-import { getTickets } from "../../api";
+import { getAllTickets } from "../../api";
 import { useAuth } from "../../hooks/useAuth";
 import { getDepartmentLabel } from "../../utils/auth";
 import Card from "../../components/ui/Card";
@@ -10,17 +10,17 @@ import { timeAgo } from "../../utils/format";
 const STATUSES = ["Open", "Routed", "Escalated", "Resolved"];
 
 export default function DepartmentTickets() {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const department = getDepartmentLabel(user);
   const [tickets, setTickets] = useState([]);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("All");
 
   useEffect(() => {
-    getTickets().then((allTickets) =>
+    getAllTickets(token).then((allTickets) =>
       setTickets(allTickets.filter((ticket) => ticket.department === department))
     );
-  }, [department]);
+  }, [department, token]);
 
   const filtered = useMemo(() => {
     const query = search.trim().toLowerCase();
