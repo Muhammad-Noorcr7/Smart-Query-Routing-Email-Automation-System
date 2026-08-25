@@ -10,6 +10,7 @@ from app.core.database import Base
 from app.routes.auth import router as auth_router
 from app.routes.admin import router as admin_router
 from app.routes.departments import router as departments_router
+from app.routes.queries import router as queries_router
 
 
 app = FastAPI(title=settings.app_name)
@@ -25,6 +26,7 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(admin_router)
 app.include_router(departments_router)
+app.include_router(queries_router)
 
 
 @app.on_event("startup")

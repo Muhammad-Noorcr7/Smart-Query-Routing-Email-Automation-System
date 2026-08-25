@@ -22,6 +22,7 @@ class User(Base):
         DateTime, default=lambda: datetime.now(UTC), nullable=False
     )
     department = relationship("Department", back_populates="users")
+    queries = relationship("Query", back_populates="student")
 
     @property
     def department_name(self) -> str | None:

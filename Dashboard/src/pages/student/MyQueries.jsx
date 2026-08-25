@@ -8,14 +8,12 @@ import DepartmentBadge from "../../components/ui/DepartmentBadge";
 import { timeAgo } from "../../utils/format";
 
 export default function MyQueries() {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const [queries, setQueries] = useState([]);
 
   useEffect(() => {
-    getTickets().then((tickets) =>
-      setQueries(tickets.filter((ticket) => ticket.sender.toLowerCase() === user.email.toLowerCase()))
-    );
-  }, [user.email]);
+    getTickets(token).then(setQueries);
+  }, [token, user.email]);
 
   return (
     <div className="space-y-4">

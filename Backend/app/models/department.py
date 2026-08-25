@@ -16,3 +16,4 @@ class Department(Base):
     query = Column(Text, nullable=True)
     is_active = Column(Boolean, default=True, nullable=False)
     users = relationship("User", back_populates="department")
+    queries = relationship("Query", back_populates="department")
