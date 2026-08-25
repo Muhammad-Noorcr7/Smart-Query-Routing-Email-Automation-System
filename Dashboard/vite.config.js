@@ -4,10 +4,5 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  cacheDir: ".vite-cache",
-  server: {
-    port: 5173,
-    strictPort: true,
-  },
   plugins: [react(), tailwindcss()],
 })

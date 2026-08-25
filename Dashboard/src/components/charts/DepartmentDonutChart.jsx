@@ -1,5 +1,5 @@
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
-import { DEPARTMENT_CONFIG_BY_NAME, DEPARTMENT_HEX } from "../../utils/constants";
+import { DEPARTMENT_CONFIG, DEPARTMENT_HEX } from "../../utils/constants";
 import { SkeletonBlock } from "../ui/Skeleton";
 
 function CustomTooltip({ active, payload }) {
@@ -47,20 +47,8 @@ export default function DepartmentDonutChart({ data, loading }) {
 
       <ul className="w-full space-y-2">
         {data.map((d) => {
-          const config = DEPARTMENT_CONFIG_BY_NAME[d.department];
+          const config = DEPARTMENT_CONFIG[d.department];
           const pct = total ? Math.round((d.count / total) * 100) : 0;
-          if (!config) {
-            return (
-              <li key={d.department} className="flex items-center gap-2.5 text-[13px]">
-                <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-slate-400" />
-                <span className="flex-1 text-ink-muted">{d.department}</span>
-                <span className="font-mono text-xs tabular-nums text-ink-faint">{pct}%</span>
-                <span className="w-6 text-right font-mono text-xs font-medium tabular-nums text-ink">
-                  {d.count}
-                </span>
-              </li>
-            );
-          }
           return (
             <li key={d.department} className="flex items-center gap-2.5 text-[13px]">
               <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${config.dot}`} />

@@ -31,25 +31,6 @@ export const DEPARTMENTS = [
   "Admin",
 ];
 
-export const DEPARTMENT_ALIASES = {
-  Exam: ["Exam", "Examination Department", "Examinations Department"],
-  Finance: ["Finance", "Finance Department"],
-  Registrar: ["Registrar", "Registrar Department"],
-  "IT Dept": ["IT Dept", "IT Department", "Information Technology", "Information Technology Department"],
-  Instructor: ["Instructor", "Instructor Department"],
-  Admin: ["Admin", "Admin Department"],
-};
-
-function departmentEntries(baseEntries) {
-  return Object.entries(DEPARTMENT_ALIASES).reduce((acc, [canonical, aliases]) => {
-    const config = baseEntries[canonical];
-    aliases.forEach((alias) => {
-      acc[alias] = config;
-    });
-    return acc;
-  }, {});
-}
-
 export const STATUSES = ["Open", "Routed", "Escalated", "Resolved"];
 
 export const DEPARTMENT_CONFIG = {
@@ -109,8 +90,6 @@ export const DEPARTMENT_CONFIG = {
   },
 };
 
-export const DEPARTMENT_CONFIG_BY_NAME = departmentEntries(DEPARTMENT_CONFIG);
-
 export const STATUS_CONFIG = {
   Open: {
     icon: CircleDot,
@@ -157,14 +136,6 @@ export const DEPARTMENT_HEX = {
   "IT Dept": "#0284C7",
   Instructor: "#E11D48",
   Admin: "#64748B",
-  "Examination Department": "#7C3AED",
-  "Finance Department": "#0E9F6E",
-  "Registrar Department": "#D97706",
-  "IT Department": "#0284C7",
-  "Information Technology": "#0284C7",
-  "Information Technology Department": "#0284C7",
-  "Instructor Department": "#E11D48",
-  "Admin Department": "#64748B",
 };
 
 export const STATUS_HEX = {

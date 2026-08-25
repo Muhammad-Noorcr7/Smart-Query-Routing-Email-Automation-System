@@ -1,4 +1,4 @@
-import { DEPARTMENT_CONFIG_BY_NAME, DEPARTMENT_CONFIG } from "../../utils/constants";
+import { DEPARTMENT_CONFIG } from "../../utils/constants";
 import { timeAgo, initials } from "../../utils/format";
 import StatusBadge from "../ui/StatusBadge";
 import { SkeletonLine } from "../ui/Skeleton";
@@ -31,7 +31,7 @@ export default function ActivityFeed({ tickets, loading }) {
   return (
     <ul className="space-y-1">
       {tickets.map((t) => {
-        const dept = DEPARTMENT_CONFIG_BY_NAME[t.department] || DEPARTMENT_CONFIG.Admin;
+        const dept = DEPARTMENT_CONFIG[t.department];
         return (
           <li
             key={t.id}

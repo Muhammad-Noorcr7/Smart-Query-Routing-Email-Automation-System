@@ -11,27 +11,16 @@ export default function Settings() {
   const [escalationEnabled, setEscalationEnabled] = useState(true);
   const [globalThreshold, setGlobalThreshold] = useState(24);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
 
   useEffect(() => {
     let active = true;
-    Promise.all([getRoutingRules(), getPipelineStatus()])
-      .then(([r, p]) => {
-        if (!active) return;
-        setRules(Array.isArray(r) ? r : []);
-        setMainEnabled(Boolean(p?.main?.enabled));
-        setEscalationEnabled(Boolean(p?.escalation?.enabled));
-        setError("");
-      })
-      .catch((requestError) => {
-        if (!active) return;
-        setError(requestError.message || "Failed to load settings.");
-        setRules([]);
-      })
-      .finally(() => {
-        if (!active) return;
-        setLoading(false);
-      });
+    Promise.all([getRoutingRules(), getPipelineStatus()]).then(([r, p]) => {
+      if (!active) return;
+      setRules(r);
+      setMainEnabled(p.main.enabled);
+      setEscalationEnabled(p.escalation.enabled);
+      setLoading(false);
+    });
     return () => {
       active = false;
     };
@@ -39,7 +28,6 @@ export default function Settings() {
 
   async function handleSaveRule(department, patch) {
     const updated = await updateRoutingRule(department, patch);
-    if (!updated) return;
     setRules((prev) => prev.map((r) => (r.department === department ? updated : r)));
   }
 
@@ -93,15 +81,10 @@ export default function Settings() {
           title="Department routing rules"
           subtitle="How incoming emails are classified and where they're sent"
         />
-        {error && (
-          <div className="mt-4 rounded-xl border border-status-escalated/20 bg-status-escalated-soft px-4 py-3 text-sm text-status-escalated">
-            {error}
-          </div>
-        )}
         <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
           {loading
             ? Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} className="h-64" />)
-            : (Array.isArray(rules) ? rules : []).map((rule) => (
+            : rules.map((rule) => (
                 <RoutingRuleCard key={rule.department} rule={rule} onSave={handleSaveRule} />
               ))}
         </div>

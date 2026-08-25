@@ -48,7 +48,7 @@ export default function ResolutionTimeChart({ data, loading }) {
         <Tooltip content={<CustomTooltip />} cursor={{ fill: "#F1F2F7" }} />
         <Bar dataKey="avgHours" radius={[0, 6, 6, 0]} maxBarSize={22}>
           {sorted.map((entry) => (
-            <Cell key={entry.department} fill={DEPARTMENT_HEX[entry.department] || "#64748B"} />
+            <Cell key={entry.department} fill={DEPARTMENT_HEX[entry.department]} />
           ))}
           <LabelList
             dataKey="avgHours"
