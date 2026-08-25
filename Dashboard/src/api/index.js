@@ -43,6 +43,44 @@ async function parseResponse(response) {
   return data;
 }
 
+function getStoredToken() {
+  try {
+    const raw = localStorage.getItem("queryroute-auth");
+    if (!raw) return null;
+    return JSON.parse(raw)?.token ?? null;
+  } catch {
+    return null;
+  }
+}
+
+async function request(path, options = {}) {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...(options.headers || {}),
+    },
+  });
+  return parseResponse(response);
+}
+
+function mapQueryToTicket(query) {
+  return {
+    id: query.id,
+    sender: query.sender_email,
+    subject: query.subject,
+    snippet: query.snippet,
+    department: query.department_name ?? "Admin",
+    status: query.status,
+    priority: query.priority,
+    confidence: query.confidence,
+    createdAt: query.created_at,
+    updatedAt: query.updated_at,
+    respondedAt: query.responded_at,
+    message: query.message,
+  };
+}
+
 export async function loginUser({ email, password }) {
   const response = await fetch(`${API_BASE_URL}/auth/login`, {
     method: "POST",
@@ -53,10 +91,9 @@ export async function loginUser({ email, password }) {
 }
 
 export async function getAdminUsers(token) {
-  const response = await fetch(`${API_BASE_URL}/admin/users`, {
+  return request("/admin/users", {
     headers: { Authorization: `Bearer ${token}` },
   });
-  return parseResponse(response);
 }
 
 const NETWORK_DELAY_MS = 300;
@@ -69,11 +106,16 @@ function delay(ms = NETWORK_DELAY_MS) {
 let routingRulesState = mockRoutingRules.map((r) => ({ ...r }));
 
 /** Full ticket list, newest first. */
-export async function getTickets() {
-  await delay();
-  return [...mockTickets].sort(
-    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-  );
+export async function getTickets(token = getStoredToken()) {
+  if (!token) {
+    return [];
+  }
+
+  const queries = await request("/queries/", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  return queries.map(mapQueryToTicket);
 }
 
 /** Single ticket by id. */
@@ -116,6 +158,19 @@ export async function getEscalations() {
 export async function getRoutingRules() {
   await delay();
   return routingRulesState.map((r) => ({ ...r }));
+}
+
+export async function submitQuery({ message, token } = {}) {
+  const authToken = token || getStoredToken();
+  if (!authToken) {
+    throw new Error("You must be signed in to submit a query.");
+  }
+
+  return request("/queries/", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${authToken}` },
+    body: JSON.stringify({ message }),
+  });
 }
 
 /** Update a single department's routing rule. Currently mutates local mock state. */
