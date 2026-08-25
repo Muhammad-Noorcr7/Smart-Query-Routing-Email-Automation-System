@@ -315,10 +315,6 @@ export async function getAdminUsers(token) {
   });
 }
 
-export async function getDepartments() {
-  return requestOrDefault("/departments/", []);
-}
-
 export async function getTickets() {
   return [];
 }

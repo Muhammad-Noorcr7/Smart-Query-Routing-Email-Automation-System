@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { MessageSquareReply, Search, FileText } from "lucide-react";
-import { getDepartments, getTickets } from "../../api";
+import { MessageSquareReply, Search } from "lucide-react";
+import { getTickets } from "../../api";
 import { useAuth } from "../../hooks/useAuth";
 import { getDepartmentLabel } from "../../utils/auth";
-import Card, { CardHeader } from "../../components/ui/Card";
+import Card from "../../components/ui/Card";
 import StatusBadge from "../../components/ui/StatusBadge";
 import { timeAgo } from "../../utils/format";
 
@@ -12,23 +12,14 @@ const STATUSES = ["Open", "Routed", "Escalated", "Resolved"];
 export default function DepartmentTickets() {
   const { user } = useAuth();
   const department = getDepartmentLabel(user);
-  const [departmentRow, setDepartmentRow] = useState(null);
   const [tickets, setTickets] = useState([]);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("All");
 
   useEffect(() => {
-    let active = true;
-    Promise.all([getDepartments(), getTickets()]).then(([departments, allTickets]) => {
-      if (!active) return;
-      const currentDepartment =
-        departments.find((item) => item.name?.toLowerCase() === department.toLowerCase()) || null;
-      setDepartmentRow(currentDepartment);
-      setTickets(allTickets.filter((ticket) => ticket.department === department));
-    });
-    return () => {
-      active = false;
-    };
+    getTickets().then((allTickets) =>
+      setTickets(allTickets.filter((ticket) => ticket.department === department))
+    );
   }, [department]);
 
   const filtered = useMemo(() => {
@@ -48,27 +39,6 @@ export default function DepartmentTickets() {
 
   return (
     <div className="space-y-4">
-      <Card>
-        <CardHeader
-          title="Saved department query"
-          subtitle="This is the query text currently stored in the departments table"
-        />
-        <div className="mt-4 flex items-start gap-3 rounded-xl border border-border bg-surface-sunken p-4">
-          <FileText size={18} className="mt-0.5 text-primary" />
-          <div className="min-w-0 flex-1">
-            {departmentRow?.query ? (
-              <p className="text-sm leading-6 text-ink-muted">{departmentRow.query}</p>
-            ) : (
-              <p className="text-sm text-ink-faint">No query has been saved for this department yet.</p>
-            )}
-            <p className="mt-2 text-xs text-ink-faint">
-              Department: {departmentRow?.name || department}
-              {departmentRow?.user_id != null ? ` · User ID: ${departmentRow.user_id}` : ""}
-            </p>
-          </div>
-        </div>
-      </Card>
-
       <Card className="flex flex-col gap-3 sm:flex-row">
         <div className="relative flex-1">
           <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-faint" />
