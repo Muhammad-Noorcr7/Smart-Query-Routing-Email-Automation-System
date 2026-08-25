@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight, CheckCircle2, Eye, EyeOff, LoaderCircle, LockKeyhole, Mail, UserRound, Waypoints } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { getDashboardPath } from "../utils/auth";
@@ -177,6 +177,12 @@ export default function Login() {
               )}
             </button>
           </form>
+          <p className="mt-6 text-center text-sm text-ink-muted">
+            Don&apos;t have an account?{" "}
+            <Link to="/signup" className="font-semibold text-primary hover:text-primary-dark">
+              Create account
+            </Link>
+          </p>
           <p className="mt-8 text-center text-xs leading-5 text-ink-faint">
             Protected access for authorized staff only.
           </p>
